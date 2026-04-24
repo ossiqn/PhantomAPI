@@ -97,7 +97,7 @@ python main.py
 
 ## Preview
 
-![PhantomAPI Terminal Preview](https://i.imgur.com/PLACEHOLDER.png)
+![PhantomAPI Terminal Preview](https://i.imgur.com/8GnZd5C.png)
 
 > Engine startup log showing proxy status, rate limit config and readiness signal.
 
