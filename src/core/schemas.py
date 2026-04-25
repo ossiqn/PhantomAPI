@@ -1,12 +1,12 @@
 from pydantic import BaseModel, HttpUrl, field_validator
 from typing   import Optional, Any
 
-
 class ExtractionRequest(BaseModel):
-    url:             HttpUrl
-    prompt:          str
-    wait_for_selector: Optional[str] = None
-    javascript:      Optional[str]   = None
+    url:               HttpUrl
+    prompt:            str
+    wait_for_selector: Optional[str]     = None
+    javascript:        Optional[str]     = None
+    webhook_url:       Optional[HttpUrl] = None
 
     @field_validator("prompt")
     @classmethod
@@ -23,15 +23,18 @@ class ExtractionRequest(BaseModel):
             raise ValueError("Custom JavaScript cannot exceed 2000 characters.")
         return value
 
-
 class ExtractionResponse(BaseModel):
     success:        bool
     url:            str
     extracted_data: dict[str, Any]
-    tokens_used:    Optional[int]  = None
-    proxy_used:     Optional[str]  = None
+    tokens_used:    Optional[int]   = None
+    proxy_used:     Optional[str]   = None
     elapsed_ms:     Optional[float] = None
 
+class ExtractionQueuedResponse(BaseModel):
+    success: bool
+    message: str
+    task_id: str
 
 class HealthResponse(BaseModel):
     status:      str
@@ -40,9 +43,8 @@ class HealthResponse(BaseModel):
     environment: str
     proxy_count: int
 
-
 class ErrorResponse(BaseModel):
-    success: bool        = False
+    success: bool          = False
     error:   str
     detail:  Optional[str] = None
-    code:    Optional[int]  = None
+    code:    Optional[int] = None
