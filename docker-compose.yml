@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  phantomapi:
+    build: .
+    container_name: phantomapi_engine
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./proxies.txt:/app/proxies.txt
+    restart: unless-stopped
