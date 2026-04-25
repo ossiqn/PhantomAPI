@@ -22,9 +22,7 @@ from src.core.exceptions     import WAFBypassFailed, PageLoadTimeout, EmptyConte
 from src.utils.proxy_manager import proxy_manager
 from src.utils.logger        import setup_logger
 
-
 logger = setup_logger("PhantomAPI.Scraper")
-
 
 _STEALTH_SCRIPT = """
     Object.defineProperty(navigator, 'webdriver',       { get: () => undefined });
@@ -47,7 +45,6 @@ _STEALTH_SCRIPT = """
             ? Promise.resolve({ state: Notification.permission })
             : originalQuery(parameters);
 """
-
 
 class ScraperService:
 
@@ -82,6 +79,18 @@ class ScraperService:
                 "Chrome/124.0.0.0 Safari/537.36"
             ),
         ]
+
+        if settings.ADVANCED_STEALTH_MODE:
+            flags.extend([
+                "--disable-web-security",
+                "--allow-running-insecure-content",
+                "--disable-features=IsolateOrigins,site-per-process",
+                "--disable-site-isolation-trials",
+                "--disable-client-side-phishing-detection",
+                "--disable-component-extensions-with-background-pages",
+                "--disable-domain-reliability",
+                "--disable-features=TranslateUI,BlinkGenPropertyTrees",
+            ])
 
         for flag in flags:
             options.add_argument(flag)
@@ -244,6 +253,5 @@ class ScraperService:
             time.sleep(sleep)
 
         raise WAFBypassFailed(detail=f"All {settings.RETRY_ATTEMPTS} attempts exhausted.")
-
 
 scraper_service = ScraperService()
